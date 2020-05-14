@@ -4,6 +4,8 @@ go:
 #repository:
 #  path: github.com/Lusitaniae/apache_exporter
 build:
+  binaries:
+    - name: prometheus-onlyoffice-exporter
   flags: -a -tags netgo
   ldflags: |
       -X github.com/prometheus/common/version.Version={{.Version}}

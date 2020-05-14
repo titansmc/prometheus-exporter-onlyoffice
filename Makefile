@@ -1,8 +1,8 @@
 VERSION   := $(shell cat VERSION)
 GO    		:= GO111MODULE=on go
 PROMU 		:= $(shell $(GO) env GOPATH)/bin/promu
-BIN       := prometheus_onlyoffice_exporter
-CONTAINER := prometheus_onlyoffice_exporter
+BIN       := prometheus-onlyoffice-exporter
+CONTAINER := prometheus-onlyoffice-exporter
 GOOS      ?= linux
 GOARCH    ?= amd64
 
@@ -17,10 +17,13 @@ $(BIN):
 	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) $(PROMU) build --prefix $(PREFIX)
 
 release: $(TAR)
-	curl -XPOST --data-binary @$< $(DST)/$<
+	#curl -XPOST --data-binary @$< $(DST)/$<
 
 build-docker: $(BIN)
 	docker build -t $(CONTAINER) .
 
 $(TAR): $(BIN)
 	tar czf $@ $<
+
+clean:
+	rm -f $(BIN) $(TAR)

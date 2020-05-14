@@ -3,3 +3,4 @@
 launch.json
 main
 prometheus-onlyoffice-exporter
+prometheus-onlyoffice-exporter-*.tar.gz

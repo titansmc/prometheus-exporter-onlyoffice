@@ -20,10 +20,10 @@ const (
 )
 
 var (
-	listenAddress = flag.String("web.listen-address", ":9999", "Address on which to expose metrics.")
+	listenAddress = flag.String("web.listen-address", ":9876", "Address on which to expose metrics.")
 	metricsPath   = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
 	scrapeURI     = flag.String("scrape_uri", "http://localhost/info/info.json", "URI to the onlyoffice statistics info.")
-	insecure      = flag.Bool("insecure", false, "Ignore server certificate if using https.")
+	insecure      = flag.Bool("insecure", false, "Ignore onlyoffice server certificate if using https.")
 )
 
 type Exporter struct {

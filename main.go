@@ -43,6 +43,7 @@ type Exporter struct {
 	viewConnectionsLastWeek  *prometheus.Desc
 	editConnectionsLastMonth *prometheus.Desc
 	viewConnectionsLastMonth *prometheus.Desc
+	viewConnectionsCurrent   *prometheus.Desc
 	licenseInfo              *prometheus.Desc
 }
 
@@ -66,6 +67,9 @@ type Onlyoffice struct {
 		Week  OnlyofficeStats `json:week`
 		Month OnlyofficeStats `json:month`
 	} `json:connectionsStat`
+	Quota struct {
+		CurrConn uint   `json:editorConnectionsCount`
+	} `json:quota`
 	LicenseInfo struct {
 		Connections uint   `json:connections`
 		HasLicense  bool   `json:hasLicense`
@@ -137,6 +141,12 @@ func NewExporter(uri string) *Exporter {
 		viewConnectionsLastMonth: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "", "view_connections_last_month"),
 			"Number of view connections during last month",
+			[]string{"type"},
+			nil,
+		),
+		viewConnectionsCurrent: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, "", "view_connections_current"),
+			"Number of view connections currently",
 			[]string{"type"},
 			nil,
 		),
@@ -237,6 +247,10 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		onlyoffice.ServerInfo.BuildVersion,
 		fmt.Sprint(onlyoffice.ServerInfo.BuildNumber))
 
+	ch <- prometheus.MustNewConstMetric(e.viewConnectionsCurrent, prometheus.GaugeValue, 1,
+		onlyoffice.viewConnectionsCurrent.editorConnectionsCount,
+		fmt.Sprint(onlyoffice.viewConnectionsCurrent.editorConnectionsCount))
+	
 	return nil
 }
 
@@ -268,6 +282,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- e.editConnectionsLastMonth
 	ch <- e.editConnectionsLastMonth
 	ch <- e.licenseInfo
+	ch <- e.viewConnectionsCurrent
 
 	e.scrapeFailures.Describe(ch)
 }

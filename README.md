@@ -1,5 +1,7 @@
 # OnlyOffice Exporter for Prometheus
 
+Based on the work from https://edu-git.ac-versailles.fr/prometheus/exporter/onlyoffice.git
+
 Exports OnlyOffice statistics via HTTP for Prometheus consumption.
 
 Help on flags:

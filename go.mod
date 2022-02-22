@@ -1,4 +1,4 @@
-module github.com/titansmc/prom-exporter-onlyoffice
+module github.com/titansmc/prometheus-exporter-onlyoffice
 
 go 1.17
 

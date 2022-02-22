@@ -192,7 +192,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 	ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 1)
 
 	data, err := ioutil.ReadAll(resp.Body)
-	fmt.Printf("%s", data)
+
 	resp.Body.Close()
 	if resp.StatusCode != 200 {
 		if err != nil {
@@ -207,9 +207,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		return fmt.Errorf("not a valid json: %v", err)
 		return err
 	}
-	fmt.Printf("\n")
-	fmt.Printf("\n")
-	fmt.Printf("%+v\n", onlyoffice)
+
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Min), "min")
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Avr), "avr")
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Max), "max")

@@ -19,6 +19,8 @@ Usage of ./prometheus_onlyoffice_exporter:
 Pay attention that by default, the `info/info.json` page is only available from localhost.
 The onlyoffice's nginx configuration has to be modified if the exporter is not running localy.
 
+This modified version is including the number of active connections, valid to monitor the enterprise licenses left. `onlyoffice_connections_current`.
+
 ## Collectors
 
 OnlyOffice metrics:
@@ -46,5 +48,8 @@ OnlyOffice metrics:
 # TYPE onlyoffice_server_info gauge
 # HELP onlyoffice_up Could the OnlyOffice server be reached
 # TYPE onlyoffice_up gauge
+# HELP onlyoffice_connections_current Number of connections currently active
+# TYPE onlyoffice_connections_current gauge
+
 ```
 

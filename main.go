@@ -49,37 +49,37 @@ type Exporter struct {
 
 type OnlyofficeStats struct {
 	Edit struct {
-		Min uint `json:min`
-		Avr uint `json:avr`
-		Max uint `json:max`
-	} `json:edit`
+		Min uint `json:"min"`
+		Avr uint `json:"avr"`
+		Max uint `json:"max"`
+	} `json:"edit"`
 	View struct {
-		Min uint `json:min`
-		Avr uint `json:avr`
-		Max uint `json:max`
-	} `json:view`
+		Min uint `json:"min"`
+		Avr uint `json:"avr"`
+		Max uint `json:"max"`
+	} `json:"view"`
 }
 
 type Onlyoffice struct {
 	ConnectionsStat struct {
-		Hour  OnlyofficeStats `json:hour`
-		Day   OnlyofficeStats `json:day`
-		Week  OnlyofficeStats `json:week`
-		Month OnlyofficeStats `json:month`
-	} `json:connectionsStat`
+		Hour  OnlyofficeStats `json:"hour"`
+		Day   OnlyofficeStats `json:"day"`
+		Week  OnlyofficeStats `json:"week"`
+		Month OnlyofficeStats `json:"month"`
+	} `json:"connectionsStat"`
 	Quota struct {
-		CurrConn uint `json:editorConnectionsCount`
-	} `json:quota`
+		CurrConn uint `json:"editorConnectionsCount"`
+	} `json:"quota"`
 	LicenseInfo struct {
-		Connections uint   `json:connections`
-		HasLicense  bool   `json:hasLicense`
-		BuildDate   string `json:buildDate`
-		EndDate     string `json:endDate`
-	} `json:licenseInfo`
+		Connections uint   `json:"connections"`
+		HasLicense  bool   `json:"hasLicense"`
+		BuildDate   string `json:"buildDate"`
+		EndDate     string `json:"endDate"`
+	} `json:"licenseInfo"`
 	ServerInfo struct {
-		BuildVersion string `json:buildVersion`
-		BuildNumber  uint   `json:buildNumber`
-	} `json:serverInfo`
+		BuildVersion string `json:"buildVersion"`
+		BuildNumber  uint   `json:"buildNumber"`
+	} `json:"serverInfo"`
 }
 
 // NewExporter allocates and initializes metrics
@@ -207,7 +207,9 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		return fmt.Errorf("not a valid json: %v", err)
 		return err
 	}
-
+	fmt.Printf("\n")
+	fmt.Printf("\n")
+	fmt.Printf("%+v\n", onlyoffice)
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Min), "min")
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Avr), "avr")
 	collectStat(ch, e.editConnectionsLastHour, float64(onlyoffice.ConnectionsStat.Hour.Edit.Max), "max")
@@ -235,6 +237,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 	collectStat(ch, e.viewConnectionsLastMonth, float64(onlyoffice.ConnectionsStat.Month.View.Min), "min")
 	collectStat(ch, e.viewConnectionsLastMonth, float64(onlyoffice.ConnectionsStat.Month.View.Avr), "avr")
 	collectStat(ch, e.viewConnectionsLastMonth, float64(onlyoffice.ConnectionsStat.Month.View.Max), "max")
+
 	collectStat(ch, e.editConnectionsCurrent, float64(onlyoffice.Quota.CurrConn), "editorConnectionsCount")
 
 	ch <- prometheus.MustNewConstMetric(e.licenseInfo,
@@ -249,7 +252,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		onlyoffice.ServerInfo.BuildVersion,
 		fmt.Sprint(onlyoffice.ServerInfo.BuildNumber))
 
-	//ch <- prometheus.MustNewConstMetric(e.viewConnectionsCurrent, prometheus.GaugeValue, 1,
+	//ch <- prometheus.MustNewConstMetric(e.editConnectionsCurrent, prometheus.GaugeValue, 1,
 	//	onlyoffice.Quota.CurrConn,
 	//	fmt.Sprint(onlyoffice.Quota.CurrConn))
 

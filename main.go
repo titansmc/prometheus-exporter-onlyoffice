@@ -68,7 +68,21 @@ type Onlyoffice struct {
 		Month OnlyofficeStats `json:"month"`
 	} `json:"connectionsStat"`
 	Quota struct {
-		CurrConn uint `json:"editorConnectionsCount"`
+		Edit struct {
+			ConnectionsCount int `json:"connectionsCount"`
+			UsersCount       struct {
+				Unique    int `json:"unique"`
+				Anonymous int `json:"anonymous"`
+			} `json:"usersCount"`
+		} `json:"edit"`
+		View struct {
+			ConnectionsCount int `json:"connectionsCount"`
+			UsersCount       struct {
+				Unique    int `json:"unique"`
+				Anonymous int `json:"anonymous"`
+			} `json:"usersCount"`
+		} `json:"view"`
+		ByMonth []interface{} `json:"byMonth"`
 	} `json:"quota"`
 	LicenseInfo struct {
 		Connections uint   `json:"connections"`
@@ -236,7 +250,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 	collectStat(ch, e.viewConnectionsLastMonth, float64(onlyoffice.ConnectionsStat.Month.View.Avr), "avr")
 	collectStat(ch, e.viewConnectionsLastMonth, float64(onlyoffice.ConnectionsStat.Month.View.Max), "max")
 
-	collectStat(ch, e.editConnectionsCurrent, float64(onlyoffice.Quota.CurrConn), "editorConnectionsCount")
+	collectStat(ch, e.editConnectionsCurrent, float64(onlyoffice.Quota.Edit.ConnectionsCount), "editConnectionsCount")
 
 	ch <- prometheus.MustNewConstMetric(e.licenseInfo,
 		prometheus.GaugeValue,
@@ -249,10 +263,6 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 	ch <- prometheus.MustNewConstMetric(e.serverInfo, prometheus.GaugeValue, 1,
 		onlyoffice.ServerInfo.BuildVersion,
 		fmt.Sprint(onlyoffice.ServerInfo.BuildNumber))
-
-	//ch <- prometheus.MustNewConstMetric(e.editConnectionsCurrent, prometheus.GaugeValue, 1,
-	//	onlyoffice.Quota.CurrConn,
-	//	fmt.Sprint(onlyoffice.Quota.CurrConn))
 
 	return nil
 }
